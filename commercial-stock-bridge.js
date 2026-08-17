@@ -11,9 +11,39 @@
     return Number(row.total_pieces || 0) > Number(row.minimum_stock || 0);
   }
 
+  function appProducts() {
+    try {
+      const value = window.eval('products');
+      return Array.isArray(value) ? value : [];
+    } catch (error) {
+      return [];
+    }
+  }
   function existingProduct(row) {
     const code = normalize(row.product_code);
-    return Array.isArray(window.products) ? window.products.find(item => normalize(item.code || item.productCode) === code) : null;
+    return appProducts().find(item => normalize(item.code || item.productCode) === code) || null;
+  }
+  function ensureAppProduct(row) {
+    const list = appProducts();
+    if (!list.length && !window.eval) return null;
+    const old = existingProduct(row);
+    if (old) return old;
+    const product = {
+      id: `stock_${row.id}`,
+      name: String(row.product_name || 'منتوج جديد'),
+      code: String(row.product_code || ''),
+      price: 0,
+      priceTiers: [{minQty: 1, maxQty: null, price: 0}],
+      qty: Number(row.pieces_per_box || 1),
+      category: categoryFor(row),
+      availability: stockStatus(row) ? 'available' : 'unavailable',
+      image: row.image_url || '',
+      description: 'منتوج من المخزون',
+      promo10Plus1: false,
+      stockManaged: true
+    };
+    try { list.push(product); } catch (error) { return null; }
+    return product;
   }
 
   function categoryFor(row) {
@@ -62,10 +92,19 @@
       const text = `${row.product_name || ''} ${row.product_code || ''}`.toLowerCase();
       return matchesCategory && (!query || text.includes(query));
     });
+    rows.forEach(row => ensureAppProduct(row));
     grid.innerHTML = rows.map(row => cardHtml(row, existingProduct(row))).join('');
     if (empty) empty.style.display = rows.length ? 'none' : 'block';
     if (carousel) carousel.style.display = rows.length ? '' : 'none';
     grid.querySelectorAll('.stock-direct-card').forEach(card => {
+      const row = stockRows.find(item => `stock-${item.id}` === card.dataset.id || String(item.product_code || '') === card.dataset.stockCode);
+      const product = row ? ensureAppProduct(row) : null;
+      card.addEventListener('click', event => {
+        if (event.target.closest('button,input,label')) return;
+        if (product) {
+          try { window.eval(`openProductFocus(${JSON.stringify(product.id)})`); } catch (error) { console.warn('Product focus unavailable', error); }
+        }
+      });
       card.style.opacity = '1';
       card.style.pointerEvents = 'auto';
       card.style.position = 'relative';
@@ -89,7 +128,7 @@
 
   const style = document.createElement('style');
   style.textContent = `
-    .catalog-carousel .carousel-stage { min-height: 0 !important; height: auto !important; overflow: visible !important; }
+    #catalog-carousel .carousel-stage { min-height: 0 !important; height: auto !important; overflow: visible !important; }
     .catalog-carousel .carousel-ring { position: relative !important; display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 14px !important; min-height: 0 !important; }
     .catalog-carousel .stock-direct-card { position: relative !important; inset: auto !important; width: auto !important; height: auto !important; min-height: 340px; transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
     .stock-direct-card .flip-card-inner { transform: none !important; }
