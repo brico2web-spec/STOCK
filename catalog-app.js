@@ -447,7 +447,7 @@ function initTierSliders(){
  });
 }
 function card(p){
- const low=Number(p.qty)<=5, available=isAvailable(p), code=productCode(p)||"—";
+ const low=Number(p.qty)<=5, available=commercialAvailability(p)==='متوفر', code=productCode(p)||"—";
  return `<article class="card flip-card ${selectedProductId===p.id?"selected":""}" data-id="${esc(p.id)}">
   <div class="flip-card-inner">
    <div class="flip-face flip-front">
@@ -2738,6 +2738,26 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("headerSearchPane
  if(video)video.play().catch(()=>{});
 })();
 
+
+
+// ربط الواجهة التجارية بمخزون Supabase عبر كود المنتوج. المشاهد يرى الحالة فقط.
+let liveStockMap=new Map();
+async function refreshCommercialStock(){
+  try{
+    const cfg=window.STOCK_CONFIG||{};
+    if(!window.supabase||!cfg.url||!cfg.anonKey)return;
+    const client=window.supabase.createClient(cfg.url,cfg.anonKey);
+    const {data:rows,error}=await client.rpc('get_public_stock_status');
+    if(error)throw error;
+    liveStockMap=new Map((rows||[]).map(row=>[String(row.product_code||'').trim().toLowerCase(),row]));
+    render();
+  }catch(error){console.warn('Stock status unavailable',error);}
+}
+function commercialAvailability(product){
+  const row=liveStockMap.get(String(product?.code||'').trim().toLowerCase());
+  if(!row)return product?.availability||'متوفر';
+  return Number(row.total_pieces||0)>Number(row.minimum_stock||0)?'متوفر':'غير متوفر حاليا';
+}
 
 function paymentScheduleData(order,state=deadlineState(order)){
  const history=getPaymentHistory(order);
