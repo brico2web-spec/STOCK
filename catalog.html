@@ -13,6 +13,10 @@
   }
 })();
 </script>
+<style>
+  /* Commercial: عرض المنتجات فقط مع الحفاظ على قالب Catalog */
+  #cartBtn, #menuBtn, #actionMenu, #cartDrawer, #cartOverlay, #productFocus, #ordersModal, #orderDetailModal, #paymentModal, #clientModal, #collectionsModal, #returnsModal, #companyInvoicesModal, #dashboardModal, #priceChangesArchiveModal, #discountsArchiveModal { display:none !important; }
+</style>
 </head>
 <body>
 <div class="app">
@@ -652,7 +656,8 @@
   }
 })();
 </script>
-<script src="catalog-app.js?v=20260817-5"></script>
+<script src="catalog-app.js?v=20260817-6"></script>
+<script src="commercial-stock-bridge.js?v=20260817-1"></script>
 
 <!-- إشعارات آجال الاستخلاص تظهر أسفل محتوى الصفحة -->
 <div id="dueAlertBar" class="due-alert-bar" role="status" aria-live="polite" hidden></div>

@@ -2792,6 +2792,3 @@ function paymentScheduleHtml(order,state=deadlineState(order),style="card"){
 
 
 
-// مزامنة المنتجات عند فتح Commercial ثم التحقق من التحديثات دورياً.
-syncStockProductsIntoCatalog();
-setInterval(()=>syncStockProductsIntoCatalog(),30000);
