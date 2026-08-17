@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06152f">
+<title>3D PEINTURES</title>
+<link rel="stylesheet" href="catalog-style.css">
+<style id="splash-critical">html,body{margin:0;min-height:100%;}body.splash-active{overflow:hidden;background:#06152f;}body.splash-active .app{visibility:hidden;}.splash-screen{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;z-index:2147483647!important;display:flex!important;overflow:hidden!important;background:#06152f!important;}.splash-video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;}.splash-shade{position:absolute!important;inset:0!important;}.splash-content{position:absolute!important;left:50%!important;bottom:10vh!important;transform:translateX(-50%)!important;width:min(82vw,360px)!important;z-index:2!important;text-align:center!important;color:#fff!important;}</style>
+</head>
+<body class="splash-active">
+<div class="splash-screen" id="splashScreen" aria-label="Chargement de 3D Peintures">
+  <video id="splashVideo" class="splash-video" autoplay muted loop playsinline preload="auto">
+    <source src="catalog-assets/loading-intro.mp4" type="video/mp4">
+  </video>
+  <div class="splash-shade"></div>
+  <div class="splash-content">
+    <div class="splash-brand">3D <span>PEINTURES</span></div>
+    <div class="splash-caption">CATALOGUE PRODUITS</div>
+    <div class="splash-loader" role="status" aria-live="polite">
+      <span class="splash-spinner"></span>
+      <span>Préparation du catalogue...</span>
+    </div>
+    <div class="splash-progress"><i id="splashProgress"></i></div>
+  </div>
+</div>
+<div class="app">
+
+<header class="topbar">
+  <div>
+    <div class="brand">3D <span>PEINTURES</span></div>
+    <div class="subtitle">CATALOGUE PRODUITS</div>
+  </div>
+  <div class="header-actions">
+  <button class="search-btn" id="headerSearchToggle" type="button" aria-label="البحث عن منتوج" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 5 5"></path></svg></button>
+  <button class="cart-btn" id="cartBtn" aria-label="Panier"><span>🛒</span><b id="cartCount">0</b></button>
+  <div class="action-menu-wrap">
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">⋮</button>
+    <div class="action-menu" id="actionMenu">
+      <div class="menu-section-title"><span>01</span> التسيير التجاري</div>
+      <button id="menuClientsDirectory"><span class="mi clients"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span><div><b>صفحة الزبناء</b><small>المدن · الكليان · تعديل وفوترة</small></div></button>
+      <button id="menuOrders"><span class="mi orders"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></span><div><b>الطلبيات</b><small>الكوموندات · الخلاص · الربح</small></div></button>
+      <button id="menuCollections"><span class="mi collections"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 3-4 3 2 5-7"/><path d="M17 6h1v1"/></svg></span><div><b>تتبع المستخلاصات</b><small>عند الاستلام · الأقساط · المجموع الإجمالي</small></div></button>
+      <button id="menuClients"><span class="mi clients"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span><div><b>معلومات الزبون</b><small>الكليان · الشركة · ICE · واتساب</small></div></button>
+      <button id="menuImportClients"><span class="mi excel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v5h4M8 12h8M8 16h8"/></svg></span><div><b>رفع ملف الزبناء</b><small>إضافة الكليان دفعة واحدة</small></div></button>
+      <div class="menu-section-title"><span>02</span> إدارة المنتوجات</div>
+      <button id="menuAdd"><span class="mi add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><div><b>إضافة منتوج</b><small>إضافة منتوج جديد</small></div></button>
+      <button id="menuEdit"><span class="mi edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2 2 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg></span><div><b>تعديل منتوج</b><small>تعديل المنتوج المحدد</small></div></button>
+       <button id="menuDelete"><span class="mi delete"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5"/></svg></span><div><b>حذف منتوج</b><small>حذف المنتوج المحدد</small></div></button>
+       <button id="menuReturns"><span class="mi returns"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H5v4"/><path d="M5 11a7 7 0 1 0 2-5"/><path d="M12 9v4l3 2"/></svg></span><div><b>رجوع السلع</b><small>إرجاعات البونات · الكليان · المجموع</small></div></button>
+       <button id="menuCompanyInvoices"><span class="mi invoices"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></span><div><b>فواتير الشركة</b><small>تسجيل الفواتير · جاهزة · قيد المعالجة</small></div></button>
+       <button id="menuPriceChangesArchive"><span class="mi price-archive"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V5"/><path d="M5 19h14"/><path d="m8 15 3-4 3 2 4-6"/><path d="M17 7h2v2"/></svg></span><div><b>أرشيف تغير الأثمنة</b><small>المنتوج · الثمن القديم والجديد · الكليان</small></div></button>
+       <button id="menuDiscountsArchive"><span class="mi discount-archive"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/><path d="M18 15v5M15.5 17.5h5"/></svg></span><div><b>أرشيف Remise</b><small>التخفيضات الكاملة · الكليان · التاريخ</small></div></button>
+       <div class="menu-section-title"><span>02</span> تحميل واستيراد</div>
+      <button id="menuExportProductsJson"><span class="mi excel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 20h14"/><path d="M8 7h8"/></svg></span><div><b>نسخة احتياطية خفيفة</b><small>المنتجات · الكوموندات · الديون · الأقساط · المستخلاصات بدون صور</small></div></button>
+      <button id="menuImportProductsJson"><span class="mi import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L8 7m4-4 4 4M5 20h14"/><path d="M8 12h8"/></svg></span><div><b>رفع نسخة احتياطية خفيفة</b><small>استرجاع البيانات التجارية بدون صور</small></div></button>
+      <button id="menuExportProductsFullJson"><span class="mi excel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 20h14"/><path d="M8 7h8"/></svg></span><div><b>تحميل المنتجات والصور</b><small>المعلومات · الأسعار · الأقسام · الصور</small></div></button>
+      <button id="menuImportProductsFullJson"><span class="mi import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L8 7m4-4 4 4M5 20h14"/><path d="M8 12h8"/></svg></span><div><b>رفع المنتجات والصور</b><small>إرجاع صور ومعلومات المنتجات إلى التطبيق</small></div></button>
+      <div class="menu-section-title"><span>03</span> التحليل</div>
+      <button id="menuDashboard"><span class="mi dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16"/><path d="m7 15 3-4 3 2 5-7"/><path d="M17 6h1v1"/></svg></span><div><b>إحصائيات عامة</b><small>المبيعات · المنتجات · أوقات الذروة</small></div></button>
+      <input id="allExcelRestoreInput" type="file" accept=".xlsx,.xls" hidden>
+      <input id="fullProductsJsonInput" type="file" accept=".json,application/json" hidden>
+    </div>
+  </div>
+  </div>
+</header>
+
+<div class="header-search-panel" id="headerSearchPanel" aria-hidden="true">
+  <div class="product-search" id="productSearchBox">
+    <span class="product-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 5 5"></path></svg></span>
+    <input id="productSearch" type="search" autocomplete="off" placeholder="قلب بكود المنتوج: D402 أو W202...">
+    <button id="clearProductSearch" type="button" aria-label="مسح البحث">×</button>
+  </div>
+</div>
+
+<!-- Slider Hero -->
+<section class="slider-wrap" id="sliderWrap">
+  <div class="slider-track" id="sliderTrack">
+    <div class="slide"><img src="https://www.dropbox.com/scl/fi/kxrnmtqs8tppm05pobquf/4d0f6520-95e5-11f1-bc8d-7d83266a267a.png?rlkey=jmkupsvj904dfhbn2z4mp1bm3&st=horvwjd5&raw=1" alt="Image slider 1" loading="lazy" decoding="async" onerror="this.closest('.slide').style.display='none'"></div>
+    <div class="slide"><img src="https://www.dropbox.com/scl/fi/h4yc8ru2s8g3rurlc75s7/37807c20-95e6-11f1-bc8d-7d83266a267a.webp?rlkey=1yuyj1i3fk9veyksu0jstea9u&st=xhpy64pe&raw=1" alt="Image slider 2" loading="lazy" decoding="async" onerror="this.closest('.slide').style.display='none'"></div>
+    <div class="slide"><img src="https://www.dropbox.com/scl/fi/2tpah5d27cxipxhd4mdsk/1786493253130.png?rlkey=uabywbiypu93gjgdtb7j9qigo&st=i8oyl0wt&raw=1" alt="Image slider 3" loading="lazy" decoding="async" onerror="this.closest('.slide').style.display='none'"></div>
+    <div class="slide"><img src="https://www.dropbox.com/scl/fi/xhqttiys45w1617ehqvr7/a4f6f980-95e3-11f1-bc8d-7d83266a267a.webp?rlkey=wrkyr64aw4jmkwo4qh23290rl&st=5eey1pee&raw=1" alt="Image slider 4" loading="lazy" decoding="async" onerror="this.closest('.slide').style.display='none'"></div>
+    <div class="slide"><img src="https://www.dropbox.com/scl/fi/xf4wrmsy94xqn022kqpsn/bf655f90-95e4-11f1-bc8d-7d83266a267a.webp?rlkey=jnrbjxh1hbf7ukmivu7qvgxx2&st=kodl8e91&raw=1" alt="Image slider 5" loading="lazy" decoding="async" onerror="this.closest('.slide').style.display='none'"></div>
+    <div class="slide"><img src="https://www.dropbox.com/scl/fi/qmyg9cnhmm6xcv3sk2wjh/c383f310-95e5-11f1-bc8d-7d83266a267a.webp?rlkey=roif0tu87r98g7zezkxodluvr&st=s8esc5j3&raw=1" alt="Image slider 6" loading="lazy" decoding="async" onerror="this.closest('.slide').style.display='none'"></div>
+  </div>
+</section>
+<section class="toolbar" aria-label="أقسام المنتجات">
+  <div class="categories" id="categories"></div>
+</section>
+
+<main>
+  <div class="section-head">
+    <div>
+      <h2 id="sectionTitle">Produits</h2>
+      <span id="count">0 produits</span>
+    </div>
+  </div>
+  <section class="catalog-carousel" id="catalogCarousel" aria-label="سلايدر المنتجات ثلاثي الأبعاد">
+    <button type="button" class="carousel-nav carousel-prev" id="carouselPrev" aria-label="المنتوج السابق">‹</button>
+    <div class="carousel-stage" id="carouselStage">
+      <div class="grid carousel-ring" id="grid"></div>
+    </div>
+    <button type="button" class="carousel-nav carousel-next" id="carouselNext" aria-label="المنتوج التالي">›</button>
+    <div class="carousel-levels-display" id="carouselLevelsDisplay" aria-live="polite" aria-label="مستويات أسعار المنتوج الحالي"></div>
+  </section>
+
+  <!-- Product focus: zoom + flip to cart -->
+  <div class="product-focus" id="productFocus" aria-hidden="true">
+    <button type="button" class="focus-close" id="closeProductFocus" aria-label="إغلاق والعودة إلى الصفحة الرئيسية">×</button>
+    <div class="focus-stage" id="focusStage">
+      <div class="focus-card" id="focusCard">
+        <div class="focus-card-inner" id="focusCardInner">
+          <section class="focus-face focus-front" aria-label="صورة المنتج المكبرة">
+            <div class="focus-image-wrap">
+              <img id="focusImage" alt="">
+              <span class="focus-category" id="focusCategory"></span>
+              <span class="focus-promo" id="focusPromo">10 + 1 GRATUIT</span>
+            </div>
+            <div class="focus-front-info">
+              <small>3D PEINTURES · PRODUIT</small>
+              <h2 id="focusName"></h2>
+              <div class="focus-code" id="focusCode"></div>
+              <strong id="focusPrice"></strong>
+              <span id="focusAvailability" class="focus-availability"></span>
+              <p>اضغط على الحافة الجانبية لقلب البطاقة وإرسال المنتوج إلى السلة</p>
+            </div>
+          </section>
+          <section class="focus-face focus-back" aria-label="إرسال المنتج إلى السلة">
+            <div class="focus-back-top"><span>COMMANDE RAPIDE</span><button type="button" id="focusBackButton" aria-label="العودة إلى صورة المنتج">↩</button></div>
+            <div class="focus-back-icon">🛒</div>
+            <small id="focusBackCode"></small>
+            <h2 id="focusBackName"></h2>
+            <p id="focusDescription"></p>
+            <div class="focus-specs">
+              <div class="focus-metric"><span class="focus-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 7v12h12V7M8 4h8M8 11h8M8 15h5"/></svg></span><span>PRIX / UNITÉ</span><strong id="focusBackPrice"></strong></div>
+              <div class="focus-metric"><span class="focus-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 12 4l8 4v10l-8 4-8-4V8Z"/><path d="m4 8 8 4 8-4M12 12v10"/></svg></span><span>UNITÉS / BOÎTE</span><strong id="focusBackQty"></strong></div>
+            </div>
+            <div class="focus-promo-note" id="focusPromoNote"></div>
+            <div class="focus-calculator" aria-live="polite">
+              <div class="calc-row"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14v13H5zM8 4h8M8 10h8M8 14h8M8 17h5"/></svg>عدد العلب</span><strong><b id="focusBoxesTotal">1</b> علبة</strong></div>
+              <div class="calc-row"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 12 4l8 4v10l-8 4-8-4V8Z"/><path d="m4 8 8 4 8-4"/></svg>مجموع الوحدات</span><strong><b id="focusUnitsTotal">0</b> وحدة</strong></div>
+              <div class="calc-total"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9.5 10.2c.4-1.5 4.5-1.5 4.9 0 .4 1.5-4.6 1.3-4.9 2.8-.3 1.5 4.5 1.6 4.9.1"/></svg>TOTAL À PAYER</span><strong><b id="focusTotalPrice">0,00</b> درهم</strong></div>
+            </div>
+            <div class="focus-quantity-group">
+              <label class="focus-quantity">NOMBRE DE PIÈCES
+                <div class="focus-qty-control"><button type="button" id="focusPiecesMinus" aria-label="إنقاص عدد القطع">−</button><input id="focusPieces" type="number" min="1" value="20" inputmode="numeric"><button type="button" id="focusPiecesPlus" aria-label="زيادة عدد القطع">+</button></div>
+              </label>
+              <label class="focus-quantity">NOMBRE DE BOÎTES
+                <div class="focus-qty-control"><button type="button" id="focusQtyMinus" aria-label="إنقاص عدد العلب">−</button><input id="focusQty" type="number" min="1" max="999" value="1" inputmode="numeric"><button type="button" id="focusQtyPlus" aria-label="زيادة عدد العلب">+</button></div>
+              </label>
+            </div>
+            <button type="button" class="focus-add" id="focusAdd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2 11h10l2-8H7M10 20a1 1 0 1 0 0 .01M18 20a1 1 0 1 0 0 .01"/></svg> Envoyer au panier</button>
+            <div class="focus-unavailable" id="focusUnavailable">غير متوفر حاليا</div>
+          </section>
+        </div>
+      </div>
+      <button type="button" class="focus-flip-handle" id="focusFlipHandle" aria-label="قلب البطاقة نحو السلة">↻</button>
+    </div>
+    <div class="focus-dots"><i></i><span>صورة المنتج</span><i></i></div>
+  </div>
+
+  <div class="empty" id="empty">
+    <div class="empty-icon">🎨</div>
+    <h3>Aucun produit</h3>
+    <p>Ajoutez un produit avec le bouton <b>⋮</b> en haut.</p>
+  </div>
+</main>
+
+<!-- Fiche produit -->
+<div class="viewer" id="viewer">
+  <button class="viewer-close" id="closeViewer">×</button>
+
+  <div class="viewer-box">
+    <div class="viewer-image-wrap">
+      <div class="image-topline">
+        <span id="viewerCategory"></span>
+        <span class="available-dot" id="viewerAvailable">● DISPONIBLE</span>
+      </div>
+      <span class="viewer-promo-badge" id="viewerPromoBadge">10 + 1 GRATUIT</span>
+
+      <button type="button" class="viewer-nav viewer-prev" id="viewerPrev" aria-label="المنتوج السابق">‹</button>
+      <button type="button" class="viewer-nav viewer-next" id="viewerNext" aria-label="المنتوج التالي">›</button>
+
+      <img id="viewerImage" alt="">
+
+      <div class="viewer-unavailable-overlay" id="viewerUnavailable">
+        <div>غير متوفر حاليا</div>
+      </div>
+    </div>
+
+    <div class="viewer-info">
+      <div class="product-kicker">RÉFÉRENCE PRODUIT</div>
+      <h2 id="viewerName"></h2>
+      <div class="viewer-code" id="viewerCode"></div>
+      <p id="viewerDescription">Produit disponible</p>
+
+      <div class="info-grid">
+        <div class="info-card price-card">
+          <span>PRIX / UNITÉ</span>
+          <strong id="viewerPrice2"></strong>
+          <small>Prix d'une pièce</small>
+        </div>
+        <div class="info-card stock-card">
+          <span>UNITÉS / BOÎTE</span>
+          <strong id="viewerStock"></strong>
+          <small id="stockText">unités par boîte</small>
+        </div>
+      </div>
+
+      <div class="box-selector">
+        <div class="box-selector-head">
+          <div><span>QUANTITÉ</span><b>Nombre de boîtes</b></div>
+          <strong id="viewerBoxTotal">0,00 درهم</strong>
+        </div>
+        <div class="box-selector-controls">
+          <button type="button" id="viewerMinus" aria-label="Diminuer">−</button>
+          <div><strong id="viewerBoxQty">1</strong><small>boîte(s)</small></div>
+          <button type="button" id="viewerPlus" aria-label="Augmenter">＋</button>
+        </div>
+        <div class="box-selector-summary"><span id="viewerBoxUnits">0 unité</span><span>Prix = prix/unité × unités/boîte × boîtes</span></div>
+      </div>
+
+      <button type="button" class="viewer-cart" id="viewerCart">🛒 Ajouter au panier</button>
+    </div>
+  </div>
+</div>
+
+<!-- Formulaire -->
+<div class="modal" id="formModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalTitle">Nouveau produit</h3>
+      <button class="close" id="closeForm">×</button>
+    </div>
+    <form id="productForm">
+      <input type="hidden" id="editId">
+      <div class="photo-picker" id="photoPicker">
+        <img id="preview" alt="">
+        <div id="photoPlaceholder"><span>＋</span><small>Ajouter une photo</small></div>
+        <input id="imageInput" type="file" accept="image/*">
+      </div>
+      <label>Nom du produit
+        <input id="name" required placeholder="Ex: Peinture blanche">
+      </label>
+      <label>Code produit
+        <input id="productCode" required maxlength="30" autocomplete="off" placeholder="Ex: d402 ou w202">
+      </label>
+      <section class="price-tier-editor" aria-labelledby="priceTierTitle">
+        <div class="price-tier-editor-head"><div><b id="priceTierTitle">أسعار البيع حسب الكمية</b><small>عمر ثمن الوحدة لكل مستوى. التطبيق يختار الثمن حسب مجموع القطع.</small></div><span>6 مستويات</span></div>
+        <div class="price-tier-grid">
+          <div class="price-tier-row"><span>المستوى 1</span><label>من قطعة<input id="tierMin1" type="number" min="1" step="1" required placeholder="1"></label><label>إلى قطعة<input id="tierMax1" type="number" min="1" step="1" required placeholder="20"></label><label>ثمن القطعة درهم<input id="tierPrice1" type="number" min="0" step="0.01" required placeholder="12.00"></label></div>
+          <div class="price-tier-row"><span>المستوى 2</span><label>من قطعة<input id="tierMin2" type="number" min="1" step="1" placeholder="21"></label><label>إلى قطعة<input id="tierMax2" type="number" min="1" step="1" placeholder="50"></label><label>ثمن القطعة درهم<input id="tierPrice2" type="number" min="0" step="0.01" placeholder="11.00"></label></div>
+          <div class="price-tier-row"><span>المستوى 3</span><label>من قطعة<input id="tierMin3" type="number" min="1" step="1" placeholder="51"></label><label>إلى قطعة<input id="tierMax3" type="number" min="1" step="1" placeholder="100"></label><label>ثمن القطعة درهم<input id="tierPrice3" type="number" min="0" step="0.01" placeholder="10.75"></label></div>
+          <div class="price-tier-row"><span>المستوى 4</span><label>من قطعة<input id="tierMin4" type="number" min="1" step="1" placeholder="101"></label><label>إلى قطعة<input id="tierMax4" type="number" min="1" step="1" placeholder="200"></label><label>ثمن القطعة درهم<input id="tierPrice4" type="number" min="0" step="0.01" placeholder="10.50"></label></div>
+          <div class="price-tier-row"><span>المستوى 5</span><label>من قطعة<input id="tierMin5" type="number" min="1" step="1" placeholder="201"></label><label>إلى قطعة<input id="tierMax5" type="number" min="1" step="1" placeholder="500"></label><label>ثمن القطعة درهم<input id="tierPrice5" type="number" min="0" step="0.01" placeholder="10.25"></label></div>
+          <div class="price-tier-row"><span>المستوى 6</span><label>من قطعة<input id="tierMin6" type="number" min="1" step="1" placeholder="501"></label><label>إلى قطعة<input id="tierMax6" type="number" min="1" step="1" placeholder="∞"></label><label>ثمن القطعة درهم<input id="tierPrice6" type="number" min="0" step="0.01" placeholder="10.00"></label></div>
+        </div>
+        <small class="field-hint">كل مستوى هو فترة كاملة: من–إلى. مثال: 1–20 بسعر 12.00 درهم، ثم 21–50 بسعر 11.00 درهم. اترك «إلى» فارغة في المستوى الأخير إذا كان مفتوحًا.</small>
+      </section>
+      <label>Unités dans la boîte<input id="qty" type="number" min="0" step="1" required></label>
+      <label>Catégorie
+        <select id="category">
+          <option>PRODUITS</option><option>ESSENCE JUPITER</option><option>DILUANT</option><option>COLLE</option><option>PEINTURE</option>
+        </select>
+      </label>
+      <label>Disponibilité du produit
+        <select id="availability">
+          <option value="available">Disponible</option>
+          <option value="unavailable">Non disponible</option>
+        </select>
+      </label>
+      <label class="promotion-toggle">
+        <input id="promo10Plus1" type="checkbox">
+        <span>
+          <b>Activer l’offre 10+1 Gratuit</b>
+          <small>À chaque 10 boîtes achetées, 1 boîte supplémentaire est offerte.</small>
+        </span>
+      </label>
+      <label>Description<textarea id="description" rows="3" placeholder="Description courte..."></textarea></label>
+      <button class="gold-btn full" type="submit">Enregistrer le produit</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- Gestion des commandes -->
+<div class="modal" id="orderModal">
+  <div class="modal-card order-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">NOUVELLE COMMANDE</small><h3>تسجيل الكوموند</h3></div>
+      <button class="close" id="closeOrder">×</button>
+    </div>
+    <form id="orderForm">
+      <label>Nom du client
+        <div class="client-autocomplete">
+          <div class="client-input-row">
+            <input id="orderClient" required placeholder="Ex: Épicerie Al Amal" autocomplete="off" aria-autocomplete="list" aria-controls="clientSuggestions" aria-expanded="false">
+          </div>
+          <div id="clientSuggestions" class="client-suggestions" role="listbox" hidden></div>
+        </div>
+      </label>
+      <input id="orderPaymentType" type="hidden" value="cash">
+      <fieldset class="order-choice-fieldset">
+        <legend>مدة الاستخلاص</legend>
+        <div class="order-choice-group" id="orderPaymentTermChoices" role="radiogroup" aria-label="مدة الاستخلاص">
+          <label class="order-choice is-selected"><input type="radio" name="orderPaymentTermChoice" value="cod" checked><span>عند الاستلام</span><small>Paiement à la livraison</small></label>
+          <label class="order-choice"><input type="radio" name="orderPaymentTermChoice" value="15"><span>15 يوماً</span><small>15 jours</small></label>
+          <label class="order-choice"><input type="radio" name="orderPaymentTermChoice" value="30"><span>30 يوماً</span><small>30 jours</small></label>
+        </div>
+      </fieldset>
+      <fieldset class="order-choice-fieldset">
+        <legend>طريقة الأداء</legend>
+        <div class="order-choice-group" id="orderPaymentTypeChoices" role="radiogroup" aria-label="طريقة الأداء">
+          <label class="order-choice is-selected"><input type="radio" name="orderPaymentTypeChoice" value="cash" checked><span>نقداً</span><small>Espèces</small></label>
+          <label class="order-choice"><input type="radio" name="orderPaymentTypeChoice" value="cheque"><span>شيك</span><small>Chèque</small></label>
+          <label class="order-choice"><input type="radio" name="orderPaymentTypeChoice" value="lettre_de_change"><span>كمبيالة</span><small>Cambiale</small></label>
+        </div>
+        <small class="field-hint">عند اختيار 15 أو 30 يوماً تبقى طريقة الأداء نقداً فقط.</small>
+      </fieldset>
+      <input id="orderPaymentTerm" type="hidden" value="cod">
+      <div class="order-total-preview">
+        <span>Total commande</span><strong id="orderGrandTotal">0,00 درهم</strong>
+      </div>
+      <button class="gold-btn full" type="submit">✓ تسجيل الكوموند (غير مخلص)</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="clientModal">
+  <div class="modal-card orders-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">CLIENT</small><h3>إضافة معلومات الكليان</h3></div>
+      <button class="close" id="closeClientModal">×</button>
+    </div>
+    <form id="clientForm">
+      <input type="hidden" id="clientEditId">
+      <label>Nom du client<input id="clientName" required placeholder="Nom et prénom"></label>
+      <label>Société<input id="clientCompany" placeholder="Nom de la société"></label>
+      <label>Ville<input id="clientCity" placeholder="Ex: KENITRA"></label>
+      <label>ICE<input id="clientICE" placeholder="ICE"></label>
+      <label>Titulaire du chèque / cambiale<input id="clientPaymentHolder" placeholder="اسم صاحب الشيك أو الكمبيالة"></label>
+      <label>Numéro du chèque / cambiale<input id="clientPaymentNumber" placeholder="رقم الشيك أو الكمبيالة"></label>
+      <label>Type de paiement
+        <select id="clientPaymentType">
+          <option value="cheque">Chèque</option>
+          <option value="lettre_de_change">Lettre de change / Cambiale</option>
+        </select>
+      </label>
+      <label>WhatsApp<input id="clientWhatsapp" type="tel" placeholder="06XXXXXXXX"></label>
+      <button class="gold-btn full" type="submit">✓ Enregistrer le client</button>
+    </form>
+    <button class="client-stats-toggle" id="clientStatsToggle" type="button">📊 كشف الزبناء والإحصائيات</button>
+    <div class="client-stats-panel" id="clientStatsPanel">
+      <div class="client-stats-toolbar">
+        <div><b>إحصائيات الطلبات</b><small>عدد الطلبات لكل زبون حسب الشهر</small></div>
+        <input id="clientStatsMonth" type="month" aria-label="شهر الإحصائيات">
+      </div>
+      <div class="client-stats-search-box">
+        <input id="clientStatsSearch" placeholder="🔎 قلب على زبون في الإحصائيات...">
+        <button id="exportStatsExcel" class="stats-export-btn" type="button" title="تحميل الإحصائيات Excel">📊 إكسيل</button>
+      </div>
+      <div id="clientStatsSummary" class="client-stats-summary"></div>
+      <div id="clientStatsList" class="client-stats-list"></div>
+    </div>
+    <button class="sales-forecast-toggle" id="salesForecastToggle" type="button">📈 توقعات المبيعات</button>
+    <div class="sales-forecast-panel" id="salesForecastPanel">
+      <div class="sales-forecast-toolbar">
+        <div><b>توقعات المبيعات</b><small>تقدير الشهر القادم حسب آخر 3 أشهر</small></div>
+        <div class="sales-forecast-actions"><input id="salesForecastMonth" type="month" aria-label="شهر التوقعات"><button id="exportSalesForecastExcel" class="stats-export-btn" type="button" title="تحميل توقعات المبيعات Excel">📊 Excel</button></div>
+      </div>
+      <div id="salesForecastSummary" class="sales-forecast-summary"></div>
+      <div class="sales-forecast-chart-title">تطور المبيعات خلال آخر 6 أشهر</div>
+      <div id="salesForecastChart" class="sales-forecast-chart"></div>
+      <div class="sales-forecast-products-title">المنتوجات الأكثر طلباً والمتوقع طلبها</div>
+      <div id="salesForecastProducts" class="sales-forecast-products"></div>
+    </div>
+    <div class="section-file-actions client-file-actions"><button id="exportClientsArchiveExcel" class="section-excel-btn" type="button">⬇ Télécharger clients Excel</button><button id="restoreClientsArchiveExcel" class="section-restore-btn" type="button">↥ Restoration</button></div>
+  </div>
+</div>
+
+<!-- صفحة الزبناء والبحث السريع -->
+<div class="modal" id="clientsDirectoryModal">
+  <div class="modal-card clients-directory-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">CLIENTS</small><h3>الزبناء</h3></div>
+      <button class="close" id="closeClientsDirectory" aria-label="إغلاق صفحة الزبناء">×</button>
+    </div>
+    <div class="clients-directory-summary"><strong id="clientsDirectoryCount">0</strong><span>زبون مسجل</span><small>المدن وعدد الزبناء · بلا إظهار الأسماء</small></div>
+    <div class="client-manager-search clients-directory-search"><span aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 5 5"></path></svg></span><input id="clientsDirectorySearch" type="search" placeholder="قلب باسم المدينة أو الشركة أو ICE..." autocomplete="off"><button id="clearClientsDirectorySearch" type="button" aria-label="مسح بحث المدن">×</button></div>
+    <div id="clientsDirectoryList" class="clients-directory-list"></div>
+  </div>
+</div>
+
+<!-- صفحة رجوع السلع -->
+<div class="modal" id="returnsModal">
+  <div class="modal-card returns-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">RETOURS</small><h3>رجوع السلع</h3></div>
+      <button class="close" id="closeReturns" aria-label="إغلاق صفحة رجوع السلع">×</button>
+    </div>
+    <div class="returns-intro">هنا كيتجمعو أوتوماتيكياً الإرجاعات المسجلة فالبونات. كل كليان عندو سجل خاص فيه اسم المنتوج، الكود، العدد، الثمن، المجموع، التاريخ ورقم البون.</div>
+    <div class="returns-summary">
+      <div class="returns-stat"><small>مجموع الإرجاعات</small><strong id="returnsTotalAmount">0,00 درهم</strong></div>
+      <div class="returns-stat"><small>عدد القطع</small><strong id="returnsTotalUnits">0</strong></div>
+      <div class="returns-stat"><small>الكليان</small><strong id="returnsClientsCount">0</strong></div>
+      <div class="returns-stat"><small>عمليات الإرجاع</small><strong id="returnsOperationsCount">0</strong></div>
+    </div>
+    <div class="returns-toolbar"><div class="returns-search-wrap"><span>⌕</span><input id="returnsSearch" type="search" placeholder="قلب باسم الكليان أو المنتوج أو الكود أو البون..." autocomplete="off"><button id="clearReturnsSearch" type="button" aria-label="مسح بحث الإرجاعات">×</button></div><button id="refreshReturns" class="returns-refresh-btn" type="button">↻ تحديث</button></div>
+    <div id="returnsClientsList" class="returns-clients-list"></div>
+    <div id="returnsEmpty" class="returns-empty">مازال ما تسجل حتى رجوع سلعة فالبونات.</div>
+  </div>
+</div>
+
+<!-- صفحة فواتير الشركة -->
+<div class="modal" id="companyInvoicesModal">
+  <div class="modal-card company-invoices-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">COMPANY INVOICES</small><h3>فواتير الشركة</h3></div>
+      <button class="close" id="closeCompanyInvoices" aria-label="إغلاق فواتير الشركة">×</button>
+    </div>
+    <div class="company-invoices-intro">قلب على الكليان وخذ معلوماتو، ربط الطلبية إذا كانت موجودة، ثم أرسل الفاتورة للشركة. كل فاتورة كتبقى محفوظة لتحت فـ <b>أرشيف فواتير الشركة</b>، وتقدر تبدّل حالتها بين <b>جاهزة</b> و<b>قيد المعالجة</b>.</div>
+    <div class="company-invoices-summary">
+      <div class="company-invoice-stat"><small>عدد الفواتير</small><strong id="companyInvoicesCount">0</strong></div>
+      <div class="company-invoice-stat company-invoice-stat-ready"><small>جاهزة</small><strong id="companyInvoicesReceived">0</strong></div>
+      <div class="company-invoice-stat company-invoice-stat-processing"><small>قيد المعالجة</small><strong id="companyInvoicesPending">0</strong></div>
+    </div>
+    <form id="companyInvoiceForm" class="company-invoice-form">
+      <div class="company-invoice-form-title">إضافة فاتورة للشركة</div>
+      <div class="company-invoice-client-picker">
+        <div class="company-invoice-client-title">بحث على الكليان ومعلوماتو</div>
+        <div class="company-invoice-client-search"><span aria-hidden="true">⌕</span><input id="companyInvoiceClientSearch" type="search" placeholder="كتب اسم الكليان، الشركة، المدينة، ICE أو الهاتف..." autocomplete="off"><button id="clearCompanyInvoiceClientSearch" type="button" aria-label="مسح بحث الكليان">×</button></div>
+        <div id="companyInvoiceClientResults" class="company-invoice-client-results" hidden></div>
+        <div id="companyInvoiceSelectedClient" class="company-invoice-selected-client" hidden></div>
+        <label class="company-invoice-order-label">الطلبية المرتبطة بالفاتورة <select id="companyInvoiceOrderId"><option value="">معلومات الكليان فقط بلا طلبية</option></select></label>
+        <div id="companyInvoiceOrderPreview" class="company-invoice-order-preview" hidden></div>
+      </div>
+      <button class="company-invoice-save" type="submit">إرسال الفاتورة</button>
+    </form>
+    <div class="company-invoices-list-head"><b>أرشيف فواتير الشركة</b><small>معلومات الكليان فقط · بدّل الحالة إلى جاهزة أو قيد المعالجة</small></div>
+    <div class="company-invoice-archive-search"><span aria-hidden="true">⌕</span><input id="companyInvoiceArchiveSearch" type="search" placeholder="قلب فالأرشيف باسم الكليان..." autocomplete="off"><button id="clearCompanyInvoiceArchiveSearch" type="button" aria-label="مسح بحث أرشيف الكليان">×</button></div>
+    <div id="companyInvoicesList" class="company-invoices-list"></div>
+    <div id="companyInvoicesEmpty" class="company-invoices-empty">مازال ما تسجل حتى فاتورة للشركة.</div>
+  </div>
+</div>
+
+<!-- أرشيف تغييرات الأثمنة -->
+<div class="modal" id="priceChangesArchiveModal">
+  <div class="modal-card operations-archive-modal-card price-changes-archive-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">PRICE CHANGES ARCHIVE</small><h3>أرشيف تغير الأثمنة</h3></div>
+      <button class="close" id="closePriceChangesArchive" aria-label="إغلاق أرشيف تغير الأثمنة">×</button>
+    </div>
+    <div class="operations-archive-intro">هنا كيبانو جميع تغييرات الأثمنة المسجلة فالكوموندات، مع الكليان، المنتوج، الثمن القديم والجديد، الكمية، أثر التغيير والتاريخ.</div>
+    <div class="operations-archive-summary">
+      <div><small>العمليات</small><strong id="priceChangesArchiveCount">0</strong></div>
+      <div><small>الكليان</small><strong id="priceChangesArchiveClients">0</strong></div>
+      <div><small>زيادات</small><strong id="priceChangesArchiveUp">0</strong></div>
+      <div><small>تخفيضات</small><strong id="priceChangesArchiveDown">0</strong></div>
+    </div>
+    <div class="operations-archive-search"><span aria-hidden="true">⌕</span><input id="priceChangesArchiveSearch" type="search" placeholder="قلب باسم الكليان..." autocomplete="off"><button id="clearPriceChangesArchiveSearch" type="button" aria-label="مسح بحث تغييرات الأثمنة">×</button></div>
+    <div id="priceChangesArchiveList" class="operations-archive-list"></div>
+    <div id="priceChangesArchiveEmpty" class="operations-archive-empty">مازال ما تسجل حتى تغيير فالثمن.</div>
+  </div>
+</div>
+
+<!-- أرشيف Remise -->
+<div class="modal" id="discountsArchiveModal">
+  <div class="modal-card operations-archive-modal-card discounts-archive-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">REMISE ARCHIVE</small><h3>أرشيف Remise / التخفيضات</h3></div>
+      <button class="close" id="closeDiscountsArchive" aria-label="إغلاق أرشيف Remise">×</button>
+    </div>
+    <div class="operations-archive-intro discounts-archive-intro">هنا كيبانو جميع التخفيضات المسجلة، مع الكليان، قيمة التخفيض، البون والتاريخ، باش تلقى أي Remise بسرعة.</div>
+    <div class="operations-archive-summary discounts-summary">
+      <div><small>عمليات Remise</small><strong id="discountsArchiveCount">0</strong></div>
+      <div><small>الكليان</small><strong id="discountsArchiveClients">0</strong></div>
+      <div><small>مجموع التخفيضات</small><strong id="discountsArchiveTotal">0,00 درهم</strong></div>
+      <div><small>أكبر تخفيض</small><strong id="discountsArchiveMax">0,00 درهم</strong></div>
+    </div>
+    <div class="operations-archive-search"><span aria-hidden="true">⌕</span><input id="discountsArchiveSearch" type="search" placeholder="قلب باسم الكليان..." autocomplete="off"><button id="clearDiscountsArchiveSearch" type="button" aria-label="مسح بحث أرشيف Remise">×</button></div>
+    <div id="discountsArchiveList" class="operations-archive-list"></div>
+    <div id="discountsArchiveEmpty" class="operations-archive-empty">مازال ما تسجل حتى Remise.</div>
+  </div>
+</div>
+
+<!-- Dashboard commercial -->
+<div class="modal" id="dashboardModal">
+  <div class="modal-card dashboard-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">ANALYSE & PILOTAGE</small><h3>لوحة التحكم التجارية</h3></div>
+      <button class="close" id="closeDashboard" aria-label="إغلاق لوحة التحكم">×</button>
+    </div>
+    <div class="dashboard-toolbar">
+      <div><b>أداء النشاط</b><small>تحليل الطلبات المسجلة حسب الشهر</small></div>
+      <label><span>الشهر</span><input id="dashboardMonth" type="month" aria-label="شهر لوحة التحكم"></label>
+    </div>
+    <div class="dashboard-summary" id="dashboardSummary">
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">▣</span><small>الطلبات</small><strong id="dashboardOrdersCount">0</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">◈</span><small>المبيعات</small><strong id="dashboardSalesTotal">0,00 درهم</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">↗</span><small>الأكثر مبيعاً</small><strong id="dashboardTopProduct">—</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">◷</span><small>ذروة الطلبات</small><strong id="dashboardPeakHour">—</strong></div>
+    </div>
+    <div class="dashboard-summary dashboard-summary-finance">
+      <div class="dashboard-stat finance-cost"><span class="dashboard-stat-icon">⇩</span><small>ثمن الشراء/التكلفة</small><strong id="dashboardCostTotal">0,00 درهم</strong></div>
+      <div class="dashboard-stat finance-profit"><span class="dashboard-stat-icon">◆</span><small>الربح التقريبي</small><strong id="dashboardProfitTotal">0,00 درهم</strong></div>
+      <div class="dashboard-stat finance-paid"><span class="dashboard-stat-icon">✓</span><small>الخلاص المحصل</small><strong id="dashboardPaidTotal">0,00 درهم</strong></div>
+      <div class="dashboard-stat finance-due"><span class="dashboard-stat-icon">!</span><small>الباقي والديون</small><strong id="dashboardDueTotal">0,00 درهم</strong></div>
+    </div>
+    <div class="dashboard-summary dashboard-summary-activity">
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">#</span><small>القطع المباعة</small><strong id="dashboardUnitsTotal">0 قطعة</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">♙</span><small>الكليان</small><strong id="dashboardClientsTotal">0</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">⌂</span><small>المدن</small><strong id="dashboardCitiesTotal">0</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">%</span><small>هامش الربح</small><strong id="dashboardMarginTotal">0.0%</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">✓</span><small>كوموندات مخلصة</small><strong id="dashboardPaidOrders">0</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">!</span><small>كوموندات فيها باقي</small><strong id="dashboardDueOrders">0</strong></div>
+      <div class="dashboard-stat"><span class="dashboard-stat-icon">＋</span><small>قطع مجانية</small><strong id="dashboardFreeUnits">0 قطعة</strong></div>
+    </div>
+    <div class="dashboard-grid">
+      <section class="dashboard-chart-card"><div class="dashboard-chart-head"><div><b>أفضل المنتجات</b><small>حسب عدد القطع وقيمة البيع</small></div><span>TOP 8</span></div><div class="dashboard-chart-wrap"><canvas id="topProductsChart"></canvas></div><div class="dashboard-empty" id="topProductsEmpty">لا توجد طلبات في هذا الشهر.</div></section>
+      <section class="dashboard-chart-card"><div class="dashboard-chart-head"><div><b>أوقات الذروة</b><small>عدد الطلبات حسب الساعة</small></div><span>24H</span></div><div class="dashboard-chart-wrap"><canvas id="peakHoursChart"></canvas></div><div class="dashboard-empty" id="peakHoursEmpty">لا توجد أوقات مسجلة بعد.</div></section>
+      <section class="dashboard-chart-card dashboard-chart-wide"><div class="dashboard-chart-head"><div><b>تطور النشاط التجاري</b><small>المبيعات والخلاص والباقي عبر آخر الأشهر</small></div><span>FINANCE</span></div><div class="dashboard-chart-wrap"><canvas id="financialChart"></canvas></div><div class="dashboard-empty" id="financialEmpty">لا توجد بيانات شهرية بعد.</div></section>
+    </div>
+    <div class="dashboard-report-grid">
+      <section class="dashboard-report-card"><div class="dashboard-report-head"><div><b>المنتوجات الأكثر مبيعًا</b><small>القطع، المبيعات، الخلاص والباقي</small></div><span>PRODUITS</span></div><div id="dashboardProductsList" class="dashboard-rank-list"></div></section>
+      <section class="dashboard-report-card"><div class="dashboard-report-head"><div><b>أحسن الكليان</b><small>حسب قيمة الطلبيات</small></div><span>CLIENTS</span></div><div id="dashboardClientsList" class="dashboard-rank-list"></div></section>
+      <section class="dashboard-report-card"><div class="dashboard-report-head"><div><b>المدن الأكثر بيعًا</b><small>المبيعات والخلاص والباقي</small></div><span>VILLES</span></div><div id="dashboardCitiesList" class="dashboard-rank-list"></div></section>
+    </div>
+    <div class="dashboard-note">ملاحظة: ثمن الشراء والربح تقريبيان حسب خانة تكلفة المنتوج الحالية أو تكلفة السطر إن كانت محفوظة. المبيعات تعتمد على مجموع الكوموندات، والخلاص والباقي يعتمدان على الأقساط وتغييرات الأثمنة المسجلة. المدن تُستخرج من معلومات الكليان المحفوظة.</div>
+    <div class="section-file-actions dashboard-file-actions"><button id="exportDashboardExcel" class="section-excel-btn" type="button">⬇ Télécharger dashboard Excel</button><button id="restoreDashboardExcel" class="section-restore-btn" type="button">↥ Restoration</button></div>
+  </div>
+</div>
+
+<div class="modal" id="collectionsModal">
+  <div class="modal-card collections-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">SUIVI DES RÈGLEMENTS</small><h3>تتبع المستخلاصات</h3></div>
+      <button class="close" id="closeCollections" aria-label="إغلاق تتبع المستخلاصات">×</button>
+    </div>
+    <div class="collections-intro">هنا كيبانو غير الكليان اللي عندهم أقساط أو تغييرات أثمنة، وكل كليان بوحدو مع مجموع الأقساط وتفاصيل الثمن اللي تبدل.</div>
+    <div class="collections-summary">
+      <div class="collection-card installments"><small>مجموع الأقساط</small><strong id="collectionsInstallmentsTotal">0,00 درهم</strong><span id="collectionsInstallmentsCount">0 قسط</span></div>
+      <div class="collection-card price-changes"><small>قيمة تغييرات الأثمنة</small><strong id="collectionsPriceChangesTotal">0,00 درهم</strong><span id="collectionsPriceChangesCount">0 تغيير</span></div>
+    </div>
+    <div class="collections-toolbar"><div><b>الدورة الحالية</b><small>من تاريخ <span id="collectionsCycleDate">—</span> · تفاصيل العمليات الحالية</small></div><div class="collections-toolbar-actions"><button id="refreshCollections" type="button">↻ تحديث</button><button id="resetCollections" class="collections-reset-btn" type="button">تصفير الدورة</button></div></div>
+    <div id="collectionsList" class="collections-list"></div>
+    <div id="collectionsEmpty" class="collections-empty">مازال ما تسجل حتى استخلاص في الدورة الحالية.</div>
+    <div class="collections-history-head"><div><b>سجل المستخلاصات القديمة</b><small>الدورات السابقة محفوظة بالتاريخ بدون أسماء الزبناء</small></div></div>
+    <div id="collectionsHistory" class="collections-history-list"></div>
+    <div id="collectionsHistoryEmpty" class="collections-empty">مازال ما كاين حتى سجل قديم.</div>
+    <section class="auto-archive-panel"><div class="collections-history-head"><div><b>أرشيف المستخلاصات التلقائي</b><small>نسخة محفوظة كل 24 ساعة مع التاريخ والمجموع</small></div><div class="archive-actions"><span id="collectionsArchiveNextLabel" class="archive-next-label">الأرشيف التلقائي خدام</span><button id="saveCollectionsArchiveNow" class="archive-save-btn" type="button">حفظ أرشيف الآن</button></div></div><div id="collectionsArchiveHistory" class="auto-archive-list"></div><div id="collectionsArchiveHistoryEmpty" class="collections-empty">مازال ما تدار حتى نسخة أرشيفية.</div></section>
+  </div>
+</div>
+
+<div class="modal" id="ordersModal">
+  <div class="modal-card orders-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">ARCHIVE</small><h3>أرشيف الكوموندات والخلاص</h3></div>
+      <button class="close" id="closeOrders">×</button>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><small>المبيعات</small><strong id="statSales">0,00 درهم</strong></div>
+      <div class="stat-card"><small>الخلاص</small><strong id="statPaid">0,00 درهم</strong></div>
+      <div class="stat-card"><small>الباقي</small><strong id="statDue">0,00 درهم</strong></div>
+    </div>
+    <div class="orders-tools">
+      <input id="orderSearch" placeholder="🔎 قلب على الكليان...">
+    </div>
+    <div id="ordersList" class="orders-list"></div>
+    <div id="ordersEmpty" class="cart-empty">مازال ما تسجل حتى طلب.</div>
+    <section class="auto-archive-panel"><div class="collections-history-head"><div><b>سجل أرشيف الكوموندات</b><small>كيتم حفظ نسخة تلقائيًا كل 24 ساعة، وكتبقى النسخ القديمة لتحت</small></div><div class="archive-actions"><span id="ordersArchiveNextLabel" class="archive-next-label">الأرشيف التلقائي خدام</span><button id="saveOrdersArchiveNow" class="archive-save-btn" type="button">حفظ أرشيف الآن</button></div></div><div id="ordersArchiveHistory" class="auto-archive-list"></div><div id="ordersArchiveHistoryEmpty" class="collections-empty">مازال ما تدار حتى نسخة أرشيفية.</div></section>
+    <div class="section-file-actions orders-file-actions"><button id="exportOrdersArchiveExcel" class="section-excel-btn" type="button">⬇ Télécharger archive Excel</button><button id="restoreOrdersArchiveExcel" class="section-restore-btn" type="button">↥ Restoration</button></div>
+  </div>
+</div>
+
+
+<div class="modal" id="orderDetailModal">
+  <div class="modal-card order-detail-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">BON DE COMMANDE</small><h3 id="orderDetailTitle">Détails de la commande</h3></div>
+      <button class="close" id="closeOrderDetail">×</button>
+    </div>
+    <div id="orderDetailBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="paymentModal">
+  <div class="modal-card payment-modal-card">
+    <div class="modal-head">
+      <div><small class="modal-kicker">RÈGLEMENT</small><h3>تسجيل قسط جديد</h3></div>
+      <button class="close" id="closePaymentModal" type="button">×</button>
+    </div>
+    <div class="payment-context" id="paymentContext">—</div>
+    <div class="payment-now"><span>تاريخ ووقت القسط</span><strong id="paymentNow">—</strong></div>
+    <form id="paymentForm">
+      <label class="payment-only-toggle"><input id="paymentOnlyPriceToggle" type="checkbox"><span><b>تغيير الثمن فقط</b><small>بدون تسجيل قسط وبدون تعمير مبلغ القسط</small></span></label>
+      <div id="paymentOnlyHint" class="payment-only-hint" hidden>الوضع مفعل: اختار المنتوج، كتب الثمن الجديد، ومن بعد حفظ وإرسال. ما خاصكش تعمر مبلغ القسط.</div>
+      <label>رقم البون / N. Bon Commande
+        <input id="paymentOrderCode" placeholder="Ex: CMD-2026-001" autocomplete="off" dir="ltr">
+      </label>
+      <label id="paymentAmountLabel">مبلغ القسط (درهم) <small>اختياري إذا اخترت تغيير الأثمنة فقط</small>
+        <input id="paymentAmount" type="number" min="0.01" step="0.01" placeholder="مثلاً: 500">
+      </label>
+      <label class="payment-discount-field">Remise / تخفيض (درهم) <small>اختياري؛ إلا تعمرات كتتنقص من الباقي وكتبان فالصورة</small>
+        <input id="paymentDiscount" type="number" min="0.01" step="0.01" placeholder="مثلاً: 50">
+      </label>
+      <section class="payment-return-box" aria-labelledby="paymentReturnTitle">
+        <div class="payment-return-head"><div><b id="paymentReturnTitle">الإرجاعات / Retours</b><small>اختياري؛ دخل كود منتوج من نفس الكوموند، اختار عدد القطع، وغادي يطرح الثمن من البون.</small></div><strong id="paymentReturnTotal">0,00 درهم</strong></div>
+        <div class="payment-return-fields"><label>كود المنتوج<input id="paymentReturnCode" type="text" placeholder="مثلاً: GR2500" autocomplete="off" dir="ltr"></label><label>عدد القطع<input id="paymentReturnQty" type="number" min="1" step="1" value="1"></label></div>
+        <div class="payment-return-price-fields"><label>ثمن المنتوج / قطعة (درهم)<input id="paymentReturnPrice" type="number" min="0" step="0.01" placeholder="يطلع تلقائيًا"></label><label>مجموع الإرجاع (درهم)<input id="paymentReturnTotalInput" type="text" readonly value="0,00 درهم"></label></div>
+        <div id="paymentReturnPreview" class="payment-return-preview">بدا كتب كود المنتوج باش يطلع الاسم الكامل والثمن.</div>
+      </section>
+      <div class="payment-preview-grid">
+        <div><span>الباقي قبل القسط</span><strong id="paymentBeforeDue">0,00 درهم</strong></div>
+        <div><span>مجموع الأقساط بعده</span><strong id="paymentAfterTotal">0,00 درهم</strong></div>
+        <div><span>الباقي بعد القسط</span><strong id="paymentAfterDue">0,00 درهم</strong></div>
+      </div>
+      <section class="payment-price-change-box" aria-labelledby="paymentPriceChangeTitle">
+        <div class="payment-price-change-head"><div><b id="paymentPriceChangeTitle">تغيير ثمن خاص للزبون</b><small>غير المنتوجات اللي طلب الكليان فهاد الكوموند؛ تقدر تبدل الثمن بلا قسط.</small></div><strong id="paymentPriceChangeTotal">0,00 درهم</strong></div>
+        <div id="paymentPriceChanges" class="payment-price-changes"></div>
+        <button id="addPaymentPriceChange" class="add-price-change-btn" type="button">＋ إضافة تغيير ثمن</button>
+      </section>
+      <div class="payment-form-actions"><button id="paymentSaveShareBtn" class="gold-btn full" type="submit">💾 حفظ وإرسال للزبون</button><button id="resendAllPaymentsBtn" class="operation-resend-btn resend-payments-btn" type="button">↻ إعادة إرسال صورة جميع الأقساط</button><button id="resendPriceChangesBtn" class="operation-resend-btn resend-price-btn" type="button">↻ إعادة إرسال صورة تغير الأثمنة</button><button id="resendDiscountsBtn" class="operation-resend-btn resend-discount-btn" type="button">↻ إعادة إرسال صورة Remise</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <div><small>VOTRE COMMANDE</small><h3>Panier</h3></div>
+    <button id="closeCart">×</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-empty" id="cartEmpty">Votre panier est vide.</div>
+  <div class="cart-footer">
+    <div><span>Total</span><strong id="cartTotal">0,00 درهم</strong></div>
+    <button id="sendOrderSave" class="send-cart" type="button">🧾 إرسال الطلب إلى الشركة وإلى الزبون</button>
+    <button id="clearCart" class="clear-cart">Vider le panier</button>
+  </div>
+</div>
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="backupInput" accept=".json,.3dbackup,application/json" hidden>
+<input type="file" id="productsJsonInput" accept=".json,application/json" hidden>
+<input type="file" id="clientsExcelInput" accept=".xlsx,.xls,.csv" hidden>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="catalog-seed.js"></script>
+<script>
+(function(){
+  const seed=window.CATALOG_SEED;
+  if(!seed) return;
+  const map={products:'3d_peintures_catalog_v3',cart:'3d_peintures_cart_v4',orders:'3d_peintures_orders_v1',clients:'3d_peintures_clients_v1'};
+  for(const [key,storageKey] of Object.entries(map)){
+    try{ if(!localStorage.getItem(storageKey) && Array.isArray(seed[key])) localStorage.setItem(storageKey,JSON.stringify(seed[key])); }catch(e){ console.warn('Catalog seed skipped',key,e); }
+  }
+})();
+</script>
+<script src="catalog-app.js"></script>
+
+<!-- إشعارات آجال الاستخلاص تظهر أسفل محتوى الصفحة -->
+<div id="dueAlertBar" class="due-alert-bar" role="status" aria-live="polite" hidden></div>
+</body>
+
+</html>
