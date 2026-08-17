@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06152f">
 <title>3D PEINTURES</title>
-<link rel="stylesheet" href="catalog-style.css">
+<link rel="stylesheet" href="catalog-style.css?v=20260817-2">
+<script>
+(function(){
+  if(sessionStorage.getItem('catalogAuthPassed')!=='1'){
+    location.replace('login.html?target=commercial&v=20260817');
+  }
+})();
+</script>
 <style id="splash-critical">html,body{margin:0;min-height:100%;}body.splash-active{overflow:hidden;background:#06152f;}body.splash-active .app{visibility:hidden;}.splash-screen{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;z-index:2147483647!important;display:flex!important;overflow:hidden!important;background:#06152f!important;}.splash-video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;}.splash-shade{position:absolute!important;inset:0!important;}.splash-content{position:absolute!important;left:50%!important;bottom:10vh!important;transform:translateX(-50%)!important;width:min(82vw,360px)!important;z-index:2!important;text-align:center!important;color:#fff!important;}</style>
 </head>
 <body class="splash-active">
@@ -661,7 +668,7 @@
   }
 })();
 </script>
-<script src="catalog-app.js"></script>
+<script src="catalog-app.js?v=20260817-2"></script>
 
 <!-- إشعارات آجال الاستخلاص تظهر أسفل محتوى الصفحة -->
 <div id="dueAlertBar" class="due-alert-bar" role="status" aria-live="polite" hidden></div>
