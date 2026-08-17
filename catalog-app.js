@@ -2714,19 +2714,51 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("headerSearchPane
 
 // Splash Screen محذوف من Commercial: الواجهة تفتح مباشرة بعد تسجيل الدخول.
 
-// ربط الواجهة التجارية بمخزون Supabase عبر كود المنتوج. المشاهد يرى الحالة فقط.
+// ربط الواجهة التجارية مباشرة بمنتجات رئيس المخزن في Supabase.
 let liveStockMap=new Map();
-async function refreshCommercialStock(){
+async function syncStockProductsIntoCatalog(){
   try{
     const cfg=window.STOCK_CONFIG||{};
     if(!window.supabase||!cfg.url||!cfg.anonKey)return;
     const client=window.supabase.createClient(cfg.url,cfg.anonKey);
-    const {data:rows,error}=await client.rpc('get_public_stock_status');
-    if(error)throw error;
-    liveStockMap=new Map((rows||[]).map(row=>[String(row.product_code||'').trim().toLowerCase(),row]));
+    let {data:rows,error}=await client.from('stock_products').select('id,product_name,product_code,category,pieces_per_box,total_pieces,minimum_stock,image_url,updated_at').order('product_name');
+    if(error){
+      console.warn('Full stock product sync unavailable, using public status:',error);
+      const fallback=await client.rpc('get_public_stock_status');
+      if(fallback.error)throw fallback.error;
+      rows=fallback.data||[];
+    }
+    rows=Array.isArray(rows)?rows:[];
+    liveStockMap=new Map(rows.map(row=>[String(row.product_code||'').trim().toLowerCase(),row]));
+    const byCode=new Map(products.map(product=>[String(productCode(product)||product.code||'').trim().toLowerCase(),product]));
+    rows.forEach(row=>{
+      const code=String(row.product_code||'').trim();
+      const key=code.toLowerCase();
+      if(!key)return;
+      const name=String(row.product_name||'').trim()||'منتوج جديد';
+      const rawCategory=String(row.category||'').trim();
+      const category=canonicalCategory(rawCategory);
+      let product=byCode.get(key);
+      if(!product){
+        product={id:'stock_'+String(row.id||code),name,code,price:0,priceTiers:[{minQty:1,maxQty:null,price:0}],costPrice:0,qty:Number(row.total_pieces)||0,category,availability:'available',description:'',image:row.image_url||'',promo10Plus1:false,stockManaged:true};
+        products.push(product);
+        byCode.set(key,product);
+      }else{
+        product.stockManaged=true;
+        if(name)product.name=name;
+        if(rawCategory)product.category=category;
+        if(row.image_url)product.image=row.image_url;
+        product.qty=Number(row.total_pieces)||0;
+      }
+      product.stockProductId=row.id||'';
+      product.stockUpdatedAt=row.updated_at||'';
+      product.stockMinimum=Number(row.minimum_stock)||0;
+      product.availability=(Number(row.total_pieces)||0)>Number(row.minimum_stock||0)?'available':'unavailable';
+    });
     render();
-  }catch(error){console.warn('Stock status unavailable',error);}
+  }catch(error){console.warn('Stock product sync unavailable',error);}
 }
+function refreshCommercialStock(){return syncStockProductsIntoCatalog()}
 function commercialAvailability(product){
   const row=liveStockMap.get(String(product?.code||'').trim().toLowerCase());
   if(!row)return product?.availability||'متوفر';
@@ -2759,3 +2791,7 @@ function paymentScheduleHtml(order,state=deadlineState(order),style="card"){
 }
 
 
+
+// مزامنة المنتجات عند فتح Commercial ثم التحقق من التحديثات دورياً.
+syncStockProductsIntoCatalog();
+setInterval(()=>syncStockProductsIntoCatalog(),30000);
