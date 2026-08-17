@@ -2712,34 +2712,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("headerSearchPane
 })();
 
 
-/* Splash Screen vidéo de démarrage — durée fixe de 5 secondes */
-(function initSplashScreen(){
- const splash=document.getElementById("splashScreen");
- const video=document.getElementById("splashVideo");
- const progress=document.getElementById("splashProgress");
- if(!splash)return;
- let closed=false;
- const start=Date.now();
- const finish=()=>{
-   if(closed)return;
-   closed=true;
-   if(progress)progress.style.width="100%";
-   document.body.classList.remove("splash-active");
-   splash.classList.add("is-leaving");
-   window.setTimeout(()=>splash.remove(),700);
- };
- if(sessionStorage.getItem('catalogAuthPassed')==='1'){ finish(); return; }
- const updateProgress=()=>{
-   if(!progress||closed)return;
-   const value=Math.min(96,((Date.now()-start)/5000)*100);
-   progress.style.width=`${value}%`;
- };
- const progressTimer=window.setInterval(updateProgress,100);
- window.setTimeout(()=>{window.clearInterval(progressTimer);finish();},2800);
- if(video){video.addEventListener("error",finish,{once:true});video.play().catch(()=>{});}
-})();
-
-
+// Splash Screen محذوف من Commercial: الواجهة تفتح مباشرة بعد تسجيل الدخول.
 
 // ربط الواجهة التجارية بمخزون Supabase عبر كود المنتوج. المشاهد يرى الحالة فقط.
 let liveStockMap=new Map();
