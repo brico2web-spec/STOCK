@@ -2728,6 +2728,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("headerSearchPane
    splash.classList.add("is-leaving");
    window.setTimeout(()=>splash.remove(),700);
  };
+ if(sessionStorage.getItem('catalogAuthPassed')==='1'){ finish(); return; }
  const updateProgress=()=>{
    if(!progress||closed)return;
    const value=Math.min(96,((Date.now()-start)/5000)*100);
