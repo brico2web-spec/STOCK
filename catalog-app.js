@@ -2734,8 +2734,8 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("headerSearchPane
    progress.style.width=`${value}%`;
  };
  const progressTimer=window.setInterval(updateProgress,100);
- window.setTimeout(()=>{window.clearInterval(progressTimer);finish();},5000);
- if(video)video.play().catch(()=>{});
+ window.setTimeout(()=>{window.clearInterval(progressTimer);finish();},2800);
+ if(video){video.addEventListener("error",finish,{once:true});video.play().catch(()=>{});}
 })();
 
 
